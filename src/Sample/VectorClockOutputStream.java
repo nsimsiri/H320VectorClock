@@ -20,7 +20,6 @@ public class VectorClockOutputStream extends ObjectOutputStream {
     @Override
     public void writeObjectOverride(Object obj) throws IOException{
         if (writeClockEnable) {
-            System.out.println("writing clock");
             super.writeObject(this.clock);
             this.writeClockEnable = false;
         }
@@ -33,4 +32,7 @@ public class VectorClockOutputStream extends ObjectOutputStream {
         this.writeClockEnable = false;
     }
 
+    public HashMap<String, Integer> getClock(){
+        return this.clock;
+    }
 }
