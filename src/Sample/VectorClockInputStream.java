@@ -24,6 +24,7 @@ public class VectorClockInputStream extends ObjectInputStream {
             this.clock.putAll(recvClock);
             System.out.println("Clock Received");
             this.readClockEnable = false;
+            
         }
         return super.readObject();
     }

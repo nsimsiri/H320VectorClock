@@ -54,6 +54,10 @@ public class VectorClock implements Serializable, Comparable<VectorClock>{
     public int compareTo(VectorClock clock){
         return 0;
     }
+    
+    public static void main(String[] args){
+    	System.out.println("Hello World");
+    }
 
 
 }
