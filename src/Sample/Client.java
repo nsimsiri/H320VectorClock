@@ -1,10 +1,9 @@
 package Sample;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
+import VectorClockLogger.*;
 
 /**
  * Created by NatchaS on 4/19/15.
@@ -12,23 +11,21 @@ import java.util.HashMap;
 public class Client {
     public Client(String name) throws IOException {
         Socket socket = new Socket("localhost", 3000);
-        OutputStream outputStream = socket.getOutputStream();
-        HashMap<String, Integer> clock = new HashMap<String, Integer>();
-        clock.put(name, 1);
-        VectorClockOutputStream vcoStream = new VectorClockOutputStream(outputStream, clock);
-        vcoStream.writeObjectOverride(String.format("Hi from %s", name));
-
+        VectorClockLogger vlogger = new VectorClockLogger("Client");
         try{
-            InputStream inputStream = socket.getInputStream();
-            VectorClockInputStream vciStream = new VectorClockInputStream(inputStream, clock);
-            String msg = (String)vciStream.readObjectOverride();
-            System.out.format("[%s] clock= %s\n", msg, vciStream.getClock().toString());
+            String msg = "Hi From Client";
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            Serializable serializedVClock = vlogger.serialize("Sending to localhost:3000");
+            out.writeObject(serializedVClock);
+            out.writeObject(msg);
+
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            msg = (String)in.readObject();
+            vlogger.deserialize(in, String.format("msg from Server: %s", msg));
 
         } catch (ClassNotFoundException e){
             e.printStackTrace();
         }
-
-
     }
 
     public static void main(String[] args) throws IOException{

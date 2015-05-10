@@ -1,8 +1,8 @@
 package Sample;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import VectorClockLogger.*;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -14,26 +14,22 @@ public class Server {
     ServerSocket serverSocket;
     public Server() throws IOException {
         this.serverSocket = new ServerSocket(3000);
-        HashMap<String, Integer> clock = new HashMap<String, Integer>();
-        clock.put("Server", 1);
-        System.out.println("[SERVER]Server started at 3000 " + clock.toString());
+        VectorClockLogger vlogger = new VectorClockLogger("Server");
+        System.out.println("[SERVER]Server started at 3000 " + vlogger.toString());
         try{
             while(true){
                 Socket client = serverSocket.accept();
-                System.out.println("[SERVER] client received at " + client.getInetAddress());
                 InputStream clientStream = client.getInputStream();
-                VectorClockInputStream vciStream = new VectorClockInputStream(clientStream, clock);
-                String msg = (String)vciStream.readObjectOverride();
-                System.out.println("MSG=== " + msg);
-//                vciStream.close();
+                ObjectInputStream in = new ObjectInputStream(clientStream);
+                vlogger.deserialize(in, "Client received at " + client.getInetAddress());
+                String msg = (String)in.readObject();
+                vlogger.log(msg);
 
-                clock = vciStream.getClock();
-                System.out.format("[SERVER] NewClock= %s\n", clock.toString());
-
-                OutputStream clientOStream = client.getOutputStream();
-                VectorClockOutputStream vcoStream = new VectorClockOutputStream(clientOStream, clock);
-                vcoStream.writeObjectOverride("Hi back from Server!");
-//                vcoStream.close();
+                ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
+                Serializable serializedClock = vlogger.serialize("Sending to Client");
+                msg = msg.toUpperCase();
+                out.writeObject(msg);
+                out.writeObject(serializedClock);
             }
         } catch (ClassNotFoundException e){
             e.printStackTrace();
