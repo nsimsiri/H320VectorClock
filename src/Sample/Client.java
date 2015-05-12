@@ -3,6 +3,8 @@ package Sample;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Scanner;
+
 import VectorClockLogger.*;
 
 /**
@@ -11,17 +13,23 @@ import VectorClockLogger.*;
 public class Client {
     public Client(String name) throws IOException {
         Socket socket = new Socket("localhost", 3000);
-        VectorClockLogger vlogger = new VectorClockLogger("Client");
+        VectorClockLogger vlogger = new VectorClockLogger(new Integer(socket.getLocalPort()).toString());
+        System.out.format("@%s | press Q to disconnect\n", vlogger.hostname());
         try{
-            String msg = "Hi From Client";
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            Serializable serializedVClock = vlogger.serialize("Sending to localhost:3000");
-            out.writeObject(serializedVClock);
-            out.writeObject(msg);
+            Scanner cin = new Scanner(System.in);
+            String msg = "";
+            while(!msg.equals("Q")){
+                msg = cin.nextLine();
+                if (msg.equals("Q")) break;
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+                Serializable serializedVClock = vlogger.serialize("Sending to localhost:3000");
+                out.writeObject(msg);
+                out.writeObject(serializedVClock);
 
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            msg = (String)in.readObject();
-            vlogger.deserialize(in, String.format("msg from Server: %s", msg));
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+                msg = (String)in.readObject();
+                vlogger.deserialize(in, String.format("msg from Server: %s", msg));
+            }
 
         } catch (ClassNotFoundException e){
             e.printStackTrace();

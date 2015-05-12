@@ -7,7 +7,7 @@ import java.io.*;
  * Created by NatchaS on 5/10/15.
  */
 public class VectorClockLogger {
-    VectorClock vclock;
+    private VectorClock vclock;
     public VectorClockLogger(String hostname){
         this.vclock = new VectorClock(hostname);
     }
@@ -17,7 +17,7 @@ public class VectorClockLogger {
     }
     public Serializable serialize(String msg){
         this.vclock.increment();
-        System.out.format("%s: %s\n", this.vclock.toString(), msg);
+        if (!msg.isEmpty()) System.out.format("%s: %s\n", this.vclock.toString(), msg);
         return this.vclock.serialize();
     }
 
@@ -26,14 +26,18 @@ public class VectorClockLogger {
 
     }
     public void deserialize(Serializable vc, String msg) throws IOException{
-        if (!(vc instanceof VectorClock)) throw new IOException("VectoClock Not Serializable");
+        if (!(vc instanceof VectorClock)) throw new IOException("Vector Clock Not Serializable");
         VectorClock otherClock = (VectorClock) vc;
         this.vclock.merge(otherClock);
-        System.out.format("%s: %s\n", this.vclock.toString(), msg);
+        if (!msg.isEmpty())System.out.format("%s: %s\n", this.vclock.toString(), msg);
     }
 
     public void log(String s){
         System.out.format("[%s]: %s\n", this.vclock.hostname(), s);
+    }
+
+    public String hostname(){
+        return vclock.hostname();
     }
 
     @Override
