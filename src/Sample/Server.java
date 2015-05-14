@@ -18,7 +18,7 @@ public class Server {
     public Server() throws IOException {
         this.serverSocket = new ServerSocket(3000);
         final VectorClockLogger vlogger = new VectorClockLogger("Server");
-        System.out.println("Server started at 3000 " + vlogger.toString() + ". 'ls' to see Server's vector clock");
+        System.out.println("Echo Server started at 3000 " + vlogger.toString() + ". 'ls' to see Server's vector clock");
         ExecutorService tpool = Executors.newFixedThreadPool(10);
         tpool.submit(new Runnable(){
            @Override

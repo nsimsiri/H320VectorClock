@@ -14,7 +14,7 @@ public class Client {
     public Client(String name) throws IOException {
         Socket socket = new Socket("localhost", 3000);
         VectorClockLogger vlogger = new VectorClockLogger(new Integer(socket.getLocalPort()).toString());
-        System.out.format("@%s | press Q to disconnect\n", vlogger.hostname());
+        System.out.format("Client @%s | press Q to disconnect | Type message you want to send to the echo server\n", vlogger.hostname());
         try{
             Scanner cin = new Scanner(System.in);
             String msg = "";
