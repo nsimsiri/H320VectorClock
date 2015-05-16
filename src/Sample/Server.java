@@ -69,9 +69,11 @@ public class Server {
                 }
                 vlogger.log("disconnected.");
             } catch (IOException e){
-                e.printStackTrace();
+
             } catch (ClassNotFoundException e){
                 e.printStackTrace();
+            } finally {
+                vlogger.log("disconnected.");
             }
         }
     }

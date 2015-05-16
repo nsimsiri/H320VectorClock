@@ -2,13 +2,17 @@ package VectorClockLogger;
 
 import java.util.*;
 import java.io.*;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 /**
  * Created by NatchaS on 5/10/15.
  */
 public class VectorClockLogger {
     private VectorClock vclock;
+    private Log log;
     public VectorClockLogger(String hostname){
+        this.log = LogFactory.getLog(VectorClockLogger.class);
+
         this.vclock = new VectorClock(hostname);
     }
 
@@ -17,7 +21,7 @@ public class VectorClockLogger {
     }
     public Serializable serialize(String msg){
         this.vclock.increment();
-        if (!msg.isEmpty()) System.out.format("%s: %s\n", this.vclock.toString(), msg);
+        log(msg);
         return this.vclock.serialize();
     }
 
@@ -29,11 +33,11 @@ public class VectorClockLogger {
         if (!(vc instanceof VectorClock)) throw new IOException("Vector Clock Not Serializable");
         VectorClock otherClock = (VectorClock) vc;
         this.vclock.merge(otherClock);
-        if (!msg.isEmpty())System.out.format("%s: %s\n", this.vclock.toString(), msg);
+        log(msg);
     }
 
-    public void log(String s){
-        System.out.format("[%s]: %s\n", this.vclock.hostname(), s);
+    public void log(String msg){
+        if (!msg.isEmpty()) log.info(String.format("%s: %s\n", this.vclock.toString(), msg));
     }
 
     public String hostname(){
