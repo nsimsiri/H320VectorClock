@@ -23,17 +23,13 @@ public class VectorClock implements Serializable, Comparable<VectorClock>{
     }
 
     public void merge(VectorClock that){
-        for (Map.Entry<String, Integer> e : that.getClockMap().entrySet()){
+        for (Map.Entry<String, Integer> e : that.getClock().entrySet()){
             if (!this.clock.containsKey(e.getKey())){
                 this.clock.put(e.getKey(), e.getValue());
             } else {
                 this.clock.put(e.getKey(), Math.max(e.getValue(), this.clock.get(e.getKey())));
             }
         }
-    }
-
-    public HashMap<String, Integer> getClockMap(){
-        return this.clock;
     }
 
     public void writeObject(ObjectOutputStream out) throws IOException{
