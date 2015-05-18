@@ -13,6 +13,6 @@ org.apache.commons.logging.Log=org.apache.commons.logging.impl.Log4JLogger
 log4j.configuration=log4j.properties
 ```
 
-The sample is using Log4J as the logging implementation. Configuration for this file is found in the "log4j.properties" file. 
+The sample is using Log4J as the logging implementation. Configuration for this file is found in the ```log4j.properties``` file. 
 
-One thing to note about the log4j.properties file is that you can write the log to file by specifying the path in the variable "log4j.appender.file.File". There is an example shown in that file. 
+One thing to note about the log4j.properties file is that you can write the log to file by specifying the path in the variable ```log4j.appender.file.File```. There is an example shown in that file. 
