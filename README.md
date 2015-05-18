@@ -6,7 +6,7 @@ modules. This networking example is a simple echo server example. To run these m
 - Start the client - you can start any number of clients.
 - Begin typing the message in the client command line. 
 
-The ComonsLogging configuration in the Sample package is named "commons-logging.properties". The Client will have to write this file on their own. Note that the client may use another implementation by assigning their logging implmentation to the variable "org.apache.commons.logging.Log". For example, for the sample project - the commons logging property file looks like this:
+The ComonsLogging configuration in the Sample package is named ```commons-logging.properties```. The Client will have to write this file on their own. Note that the client may use another implementation by assigning their logging implmentation to the variable "org.apache.commons.logging.Log". For example, for the sample project - the commons logging property file looks like this:
 
 ```
 org.apache.commons.logging.Log=org.apache.commons.logging.impl.Log4JLogger
